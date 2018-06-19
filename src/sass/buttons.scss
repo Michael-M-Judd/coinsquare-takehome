@@ -1,0 +1,21 @@
+.btn {
+    font-weight: 600;
+    font-size: $font-size-large;
+    vertical-align: middle;
+    text-align: center;
+    border: 1px solid transparent;
+    line-height: 1.2rem;
+    transition: all .5s ease-in-out;
+    background-color: $button-bg-color;
+    color: $button-font-color;
+    padding: 1.1rem 1.1rem;
+    letter-spacing: 2px;
+}
+
+.btn:hover, .btn:active {
+    background: darken($button-bg-color, 25%)
+}
+
+.btn-block {
+    width: 100%;
+}

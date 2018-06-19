@@ -1,0 +1,31 @@
+/* Layout for the general app */
+
+.pair-trade-container {
+    width: 100%;
+    padding: 0 15px;
+    margin: auto 15px;
+}
+
+.flex-row {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    margin: 0 -15px;
+}
+
+.col-quarter {
+    -webkit-box-flex: 0;
+        -ms-flex: 0 0 25%;
+            flex: 0 0 25%;
+    padding: 1rem;
+}
+
+.col-three-quarter {
+    -webkit-box-flex: 0;
+        -ms-flex: 0 0 75%;
+            flex: 0 0 75%;
+    max-width: 75%;
+    padding: 1rem;
+}

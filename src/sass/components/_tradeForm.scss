@@ -1,0 +1,27 @@
+label {
+    display: inline-block;
+    font-size: $font-size-sm;
+    margin-bottom: .7rem;
+    margin-left: .7rem;
+}
+
+input[type=text], input[type=password], input[type=number] {
+    box-sizing:border-box;
+}
+
+.input-container {
+    padding: 0 10px;
+    margin-bottom: 1.5rem;
+    position: relative;
+
+    .form-control {
+        
+        display: block;
+        background: transparent;
+        width: 100%;
+        padding: $input-padding;
+        border: $input-border;
+        border-radius: $input-border-radius;
+        transition: all .1s ease-in-out;
+    }
+}
