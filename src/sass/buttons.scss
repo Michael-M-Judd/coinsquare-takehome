@@ -19,3 +19,8 @@
 .btn-block {
     width: 100%;
 }
+
+button[disabled=true], button[disabled] {
+    cursor: not-allowed !important;
+    background: lighten($button-bg-color, 15%) !important;
+}
