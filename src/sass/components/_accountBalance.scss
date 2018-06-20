@@ -1,0 +1,17 @@
+.balance {
+    display: flex;
+    width: 100%;
+    border: none;
+    padding: 0 15px;
+    margin: 15px 0;
+    
+    .balance-type {
+        font-size: $font-size-large;
+        font-weight: 600;
+        flex: 0 0 30%;
+    }
+    .balance-text {
+        flex: 0 0 70%;
+    }
+}
+
