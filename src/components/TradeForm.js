@@ -24,7 +24,6 @@ class TradeForm extends Component {
      * Fires when the Trade input is changed and updates the quote price
      */
     onFromAmountChange(e) {
-        //TODO: html5 form type="number" might need js polyfill
         this.setState({ [e.target.name]: e.target.value })
 
         // get to 1 satoshi signifigance
@@ -44,7 +43,6 @@ class TradeForm extends Component {
         this.setState({fromAmount: quoteToUsd})
     }
 
-
     /**
      * Trade button clicked logic
      */
@@ -57,31 +55,32 @@ class TradeForm extends Component {
             }
             else {
                 console.log('not enough money')
+                // TODO form validation
             }
             
         }
         else {
             console.log('dont trade')
-        }
-
-        if (this.props.tradeSuccess) {
-            console.log('fuck ya')
+            // TODO form validation
         }
     }
 
     render() {
 
-        const inputCheck = this.state.fromAmount < 0 && this.state.toAmount < 0;
+        // disable button if either amount less than 0
+        const inputCheck = this.state.fromAmount > 0 && this.state.toAmount > 0;
 
         return(
+            
             <div>
+                <p>{this.inputCheck}</p>
                 <form id="trade-form" onSubmit={this.onTrade}>
                     <div className="input-container">
                         <label>Trade</label>
                         <input className="form-control" type="text" name="currencyTypeFrom" value="USD" disabled/>
                     </div>
                     <div className="input-container">
-                        <input className="form-control" type="number" name="fromAmount" placeholder="Enter your amount" value={this.state.fromAmount} onChange={this.onFromAmountChange}/>
+                        <input className="form-control" type="number" min="0" name="fromAmount" step="0.01" placeholder="Enter your amount" value={this.state.fromAmount} onChange={this.onFromAmountChange}/>
                     </div>
                     <div className="input-container">
                         <label>For</label>
@@ -91,7 +90,7 @@ class TradeForm extends Component {
                         <input className="form-control" type="number" name="toAmount" placeholder="Display Quote" value={this.state.toAmount} onChange={this.onToAmountChange}/>
                     </div>
                     <div className="input-container">
-                        <button className="btn btn-block" type="submit" disabled={this.inputCheck}>Trade</button>
+                        <button className="btn btn-block" type="submit" disabled={!inputCheck}>Trade</button>
                     </div>
                 </form>
             </div>

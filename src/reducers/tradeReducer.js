@@ -1,4 +1,4 @@
-import { UPDATE_ACCOUNT_BALANCE, UPDATE_BTC_PRICE, FIRE_TRADE } from '../actions/types';
+import { UPDATE_BTC_PRICE, FIRE_TRADE } from '../actions/types';
 
 const initialState = {
     accountBalance: {
@@ -6,7 +6,7 @@ const initialState = {
         BTC: 0
     },
     btcPrice: 0,
-    tradeSuccess: false
+    tradeSuccess: false // keep trade of trade success
 };
 
 export default function(state = initialState, action) {
@@ -25,11 +25,12 @@ export default function(state = initialState, action) {
             //TODO: Should probably do a secondary check to see BTC price hasn't dramatically changed :'(
 
             // one last check for balance validation
-            if (fromAmount < state.accountBalance.USD) {
+            if (fromAmount <= state.accountBalance.USD) {
                 
-                let newUSD = parseFloat(state.accountBalance.USD - fromAmount);
-                let newBTC = parseFloat(state.accountBalance.BTC + toAmount);
-                console.log('should have happened')
+                // obviously toFixed would have some policy for dust trading
+                let newUSD = parseFloat(state.accountBalance.USD - fromAmount).toFixed(2);
+                let newBTC = parseFloat(state.accountBalance.BTC + toAmount).toFixed(8);
+
                 return {...state, 
                     accountBalance: {
                         USD: newUSD,
@@ -39,7 +40,6 @@ export default function(state = initialState, action) {
             }
             return state
         default:
-            console.log('DEFAULT')
             return state
     }
 }

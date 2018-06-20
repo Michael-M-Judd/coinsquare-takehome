@@ -1,3 +1,4 @@
+/* Main App Container Component */
 import React, { Component } from 'react';
 import '../sass/main.scss';
 import { Provider } from 'react-redux';

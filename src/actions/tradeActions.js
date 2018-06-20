@@ -1,6 +1,9 @@
-import { UPDATE_ACCOUNT_BALANCE, UPDATE_BTC_PRICE, FIRE_TRADE } from './types';
+import { UPDATE_BTC_PRICE, FIRE_TRADE } from './types';
 import axios from 'axios';
 
+/**
+ * Gets the BTC last trading price from the bitfinex api.
+ */
 export function getBtcPrice() {
     return function(dispatch) {
         axios.get(`/api/v1/pubticker/btcusd`)
