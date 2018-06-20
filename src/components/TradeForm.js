@@ -1,51 +1,81 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { getBtcPrice, fireTrade } from '../actions/tradeActions';
 
 class TradeForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            lastPrice: 0,
             fromAmount: '',
             toAmount: ''
         }
 
         this.onFromAmountChange = this.onFromAmountChange.bind(this);
         this.onToAmountChange = this.onToAmountChange.bind(this);
+        this.onTrade = this.onTrade.bind(this);
     }
 
+    componentWillMount() {
+        this.props.getBtcPrice();
+    }
+
+    /**
+     * Fires when the Trade input is changed and updates the quote price
+     */
     onFromAmountChange(e) {
         //TODO: html5 form type="number" might need js polyfill
         this.setState({ [e.target.name]: e.target.value })
 
         // get to 1 satoshi signifigance
-        const quoteToBtc = (e.target.value / this.state.lastPrice).toFixed(8);
+        const quoteToBtc = (e.target.value / this.props.btcPrice).toFixed(8);
 
         this.setState({toAmount: quoteToBtc})
     }
 
+    /**
+     * Fires when the input pair trading to is changed and updates the amount needed to trade for.
+     */
     onToAmountChange(e) {
         this.setState({ [e.target.name]: e.target.value });
         
-        const quoteToUsd = (this.state.lastPrice * e.target.value).toFixed(2);
+        const quoteToUsd = (this.props.btcPrice * e.target.value).toFixed(2);
 
         this.setState({fromAmount: quoteToUsd})
     }
 
-    componentWillMount() {
-        axios(`/api/v1/pubticker/btcusd`)
-          .then(res => {
-            const lastPrice = res.data.last_price;
-            this.setState({ lastPrice: lastPrice });
-          })
-      }
+
+    /**
+     * Trade button clicked logic
+     */
+    onTrade(e) {
+        e.preventDefault();
+        
+        if (this.state.fromAmount && this.props.accountBalance.USD > 0) {
+            if (this.props.accountBalance.USD >= this.state.fromAmount) {
+                this.props.fireTrade(this.state.fromAmount, this.state.toAmount)
+            }
+            else {
+                console.log('not enough money')
+            }
+            
+        }
+        else {
+            console.log('dont trade')
+        }
+
+        if (this.props.tradeSuccess) {
+            console.log('fuck ya')
+        }
+    }
 
     render() {
+
+        const inputCheck = this.state.fromAmount < 0 && this.state.toAmount < 0;
+
         return(
             <div>
-                {this.state.lastPrice}
-                <form>
+                <form id="trade-form" onSubmit={this.onTrade}>
                     <div className="input-container">
                         <label>Trade</label>
                         <input className="form-control" type="text" name="currencyTypeFrom" value="USD" disabled/>
@@ -61,7 +91,7 @@ class TradeForm extends Component {
                         <input className="form-control" type="number" name="toAmount" placeholder="Display Quote" value={this.state.toAmount} onChange={this.onToAmountChange}/>
                     </div>
                     <div className="input-container">
-                        <button className="btn btn-block" type="submit" onSubmit={this.onSubmit}>Trade</button>
+                        <button className="btn btn-block" type="submit" disabled={this.inputCheck}>Trade</button>
                     </div>
                 </form>
             </div>
@@ -69,4 +99,18 @@ class TradeForm extends Component {
     }
 }
 
-export default TradeForm;
+TradeForm.propTypes = {
+    getBtcPrice: PropTypes.func.isRequired,
+    fireTrade: PropTypes.func,
+    btcPrice: PropTypes.number.isRequired,
+    accountBalance: PropTypes.object.isRequired
+}
+
+// get current btc price and account balances
+const mapStateToProps = state => ({
+    btcPrice: state.trade.btcPrice,
+    accountBalance: state.trade.accountBalance,
+    tradeSuccess: state.trade.tradeSuccess
+})
+
+export default connect(mapStateToProps,  { getBtcPrice, fireTrade }) (TradeForm);
